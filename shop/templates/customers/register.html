@@ -1,0 +1,133 @@
+{% extends 'layout.html' %} {% block body_block %} {% include 'navbar.html' %}
+{% from '_formhelpers.html' import render_field %}
+<div class="container">
+  <div class="row justify-content-center mt-5">
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h1 class="bg-info text-center text-white py-3 mb-4 rounded">
+            Register
+          </h1>
+          <form action="" method="POST">
+            {{ form.csrf_token }}
+
+            <div class="row">
+              <div class="col-md-6">
+                <!-- Personal Info Section -->
+                <div class="form-group">
+                  {{ render_field(form.name, class="form-control rounded-pill")
+                  }}
+                </div>
+                <div class="form-group">
+                  {{ render_field(form.username, class="form-control
+                  rounded-pill") }}
+                </div>
+                <div class="form-group">
+                  {{ render_field(form.email, class="form-control rounded-pill")
+                  }}
+                </div>
+                <div class="form-group">
+                  {{ render_field(form.password, class="form-control
+                  rounded-pill") }}
+                </div>
+                <div class="form-group">
+                  {{ render_field(form.confirm, class="form-control
+                  rounded-pill") }}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <!-- Address Info Section -->
+                <div class="form-group">
+                  {{ render_field(form.country, class="form-control
+                  rounded-pill") }}
+                </div>
+                <div class="form-group">
+                  {{ render_field(form.state, class="form-control rounded-pill")
+                  }}
+                </div>
+                <div class="form-group">
+                  {{ render_field(form.city, class="form-control rounded-pill")
+                  }}
+                </div>
+                <div class="form-group">
+                  {{ render_field(form.contact, class="form-control
+                  rounded-pill") }}
+                </div>
+                <div class="form-group">
+                  {{ render_field(form.address, class="form-control
+                  rounded-pill") }}
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group text-center mt-4">
+              {{ form.submit(class='btn btn-success btn-block rounded-pill') }}
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock body_block %}
+
+<!-- CSS intégré pour améliorer l'apparence -->
+<style>
+  body {
+    background-color: #f8f9fa;
+  }
+
+  .card {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-body {
+    padding: 2rem;
+  }
+
+  .form-control {
+    height: 50px;
+    font-size: 16px;
+    margin-bottom: 15px;
+  }
+
+  .form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+
+  .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+  }
+
+  .btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+  }
+
+  .btn-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+  }
+
+  .btn-block {
+    display: block;
+    width: 100%;
+  }
+
+  .rounded-pill {
+    border-radius: 50px;
+  }
+
+  .bg-info {
+    background-color: #17a2b8 !important;
+  }
+</style>

@@ -1,0 +1,100 @@
+{% extends 'layout.html' %} {% block body_block %}
+<div class="container mt-5">
+  <h1 class="text-center text-danger mb-4">Register</h1>
+  {% from "_formhelpers.html" import render_field %}
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow-lg">
+        <div class="card-body">
+          <form method="POST" enctype="multipart/form-data">
+            {{ form.csrf_token }}
+
+            <div class="form-group mb-3">
+              {{ render_field(form.name, class="form-control rounded-pill") }}
+            </div>
+            <div class="form-group mb-3">
+              {{ render_field(form.username, class="form-control rounded-pill")
+              }}
+            </div>
+            <div class="form-group mb-3">
+              {{ render_field(form.email, class="form-control rounded-pill") }}
+            </div>
+            <div class="form-group mb-3">
+              {{ render_field(form.password, class="form-control rounded-pill")
+              }}
+            </div>
+            <div class="form-group mb-3">
+              {{ render_field(form.confirm, class="form-control rounded-pill")
+              }}
+            </div>
+
+            <div class="form-group text-center">
+              <input
+                type="submit"
+                value="Register"
+                class="btn btn-info btn-block rounded-pill mt-3"
+              />
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock body_block %}
+
+<!-- CSS intégré pour améliorer l'apparence -->
+<style>
+  body {
+    background-color: #f8f9fa;
+  }
+
+  .card {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-body {
+    padding: 2rem;
+  }
+
+  .form-control,
+  .form-control-file {
+    height: 50px;
+    font-size: 16px;
+  }
+
+  .form-control:focus,
+  .form-control-file:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+
+  .btn-info {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+  }
+
+  .btn-info:hover {
+    background-color: #138496;
+    border-color: #117a8b;
+  }
+
+  .btn-block {
+    display: block;
+    width: 100%;
+  }
+
+  .rounded-pill {
+    border-radius: 50px;
+  }
+
+  .container {
+    margin-top: 50px;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+  }
+</style>

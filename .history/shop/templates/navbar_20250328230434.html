@@ -1,0 +1,138 @@
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top netflix-navbar">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">
+      <span class="logo-red">KSZ</span>SHOP
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="categoriesDropdown">
+            <i class="fas fa-list-ul me-1"></i> Catégories
+          </a>
+          <div class="dropdown-menu dropdown-menu-dark">
+            {% for c in categories %}
+            <a class="dropdown-item" href="{{url_for('get_category', id=c.id)}}">
+              <i class="fas fa-{{ 'tshirt' if c.name == 'Vêtements' else 'shoe-prints' if c.name == 'Chaussures' else 'ring' }} me-2"></i>
+              {{c.name}}
+            </a>
+            {% endfor %}
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{url_for('new_arrivals')}}">
+            <i class="fas fa-star me-1"></i> Nouveautés
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-warning" href="{{url_for('sale')}}">
+            <i class="fas fa-fire me-1"></i> Soldes <span class="badge bg-danger">-70%</span>
+          </a>
+        </li>
+      </ul>
+      
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="{{url_for('get_cart')}}">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-badge">{{session['shopcart']|length}}</span>
+          </a>
+        </li>
+        {% if current_user.is_authenticated %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="userDropdown">
+            <i class="fas fa-user-circle me-1"></i> {{current_user.name}}
+          </a>
+          <div class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+            <a class="dropdown-item" href="{{url_for('customer_dashboard')}}">
+              <i class="fas fa-user me-2"></i> Mon compte
+            </a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{{url_for('customerLogout')}}">
+              <i class="fas fa-sign-out-alt me-2"></i> Déconnexion
+            </a>
+          </div>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="{{url_for('customerLogin')}}">
+            <i class="fas fa-sign-in-alt me-1"></i> Connexion
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link btn btn-outline-light btn-sm ms-2" href="{{url_for('register_customer')}}">
+            S'inscrire
+          </a>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<style>
+  .netflix-navbar {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, transparent 100%) !important;
+    transition: background-color 0.4s ease;
+    padding: 20px 0;
+  }
+  
+  .netflix-navbar.scrolled {
+    background-color: #141414 !important;
+    padding: 10px 0;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.45);
+  }
+  
+  .logo-red {
+    color: #e50914;
+    font-weight: bold;
+  }
+  
+  .navbar-brand {
+    font-size: 2rem;
+    letter-spacing: 1px;
+  }
+  
+  .nav-link {
+    font-size: 1.1rem;
+    padding: 8px 15px;
+  }
+  
+  .cart-badge {
+    background: #e50914;
+    border-radius: 50%;
+    padding: 1px 6px;
+    font-size: 0.7rem;
+    position: relative;
+    top: -8px;
+    left: -5px;
+  }
+  
+  .dropdown-menu-dark {
+    background-color: rgba(0,0,0,0.85);
+    border: 1px solid #333;
+  }
+  
+  .dropdown-item {
+    transition: all 0.3s;
+  }
+  
+  .dropdown-item:hover {
+    background-color: #e50914;
+    transform: translateX(5px);
+  }
+</style>
+
+<script>
+  window.addEventListener('scroll', function() {
+    const navbar = document.querySelector('.netflix-navbar');
+    if (window.scrollY > 50) {
+      navbar.classList.add('scrolled');
+    } else {
+      navbar.classList.remove('scrolled');
+    }
+  });
+</script>

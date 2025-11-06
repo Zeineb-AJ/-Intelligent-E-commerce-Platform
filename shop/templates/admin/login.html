@@ -1,0 +1,139 @@
+{% extends 'layout.html' %} {% block body_block %}
+<div class="container mt-5">
+  {% from "_formhelpers.html" import render_field %}
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4">
+      <div class="card shadow-lg border-light">
+        <div class="card-body">
+          <h1 class="text-center text-white bg-primary py-3 mb-4 rounded">
+            Login
+          </h1>
+          <form method="POST" enctype="multipart/form-data">
+            {{ form.csrf_token }}
+            <div class="form-group mb-3">
+              {{ render_field(form.email, class="form-control rounded-pill") }}
+            </div>
+            <div class="form-group mb-3">
+              {{ render_field(form.password, class="form-control rounded-pill")
+              }}
+            </div>
+            <div class="form-group text-center">
+              <input
+                type="submit"
+                value="Login"
+                class="btn btn-success btn-block rounded-pill mt-3"
+              />
+            </div>
+            <div class="form-group text-center mt-3">
+              <a href="/register" class="text-decoration-none text-muted"
+                >Don't have an account? Register here</a
+              >
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock body_block %}
+
+<!-- CSS intégré pour améliorer l'apparence -->
+<style>
+  body {
+    background-color: #f4f7fa;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .card {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-body {
+    padding: 2rem;
+  }
+
+  .form-control {
+    height: 50px;
+    font-size: 16px;
+    padding: 10px;
+  }
+
+  .form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+
+  .btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+    font-size: 16px;
+    padding: 10px;
+  }
+
+  .btn-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+  }
+
+  .btn-block {
+    display: block;
+    width: 100%;
+  }
+
+  .rounded-pill {
+    border-radius: 50px;
+  }
+
+  .bg-primary {
+    background-color: #007bff !important;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  .container {
+    margin-top: 50px;
+  }
+
+  .form-group a {
+    font-size: 14px;
+    text-decoration: underline;
+  }
+
+  .form-group a:hover {
+    color: #007bff;
+  }
+
+  /* Animation de focus pour les champs de formulaire */
+  .form-control:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 5px rgba(40, 167, 69, 0.5);
+  }
+
+  /* Ajout de la transition de fond du bouton */
+  .btn-success {
+    transition: all 0.3s ease-in-out;
+  }
+  .btn-success:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+  }
+
+  .card-body {
+    background-color: #ffffff;
+    border-radius: 12px;
+  }
+
+  .bg-primary {
+    background-color: #007bff !important;
+    border-radius: 10px 10px 0 0;
+  }
+
+  /* Modifier la couleur du lien de texte */
+  .text-muted {
+    font-size: 14px;
+  }
+</style>

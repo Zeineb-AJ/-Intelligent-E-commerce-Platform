@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>{{title}}</title>
+    <style>
+       
+        :root {
+            --primary-color: #FF2D55;
+            --secondary-color: #FF6B81;
+            --dark-color: #2E2E2E;
+            --light-color: #F8F9FA;
+            --accent-color: #FFCC00;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #FFFFFF;
+            color: #FF2D55;
+        }
+    </style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    
+    {% block body_block %}{% endblock %}
+    
+    {% include 'footer.html' %}
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>

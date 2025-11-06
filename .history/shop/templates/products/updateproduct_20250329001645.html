@@ -1,0 +1,38 @@
+{% extends 'layout.html' %}
+
+{% block body_block %}
+{% include '_messages.html' %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <h2 class="text-center bg-info p-2 mb-4 rounded">
+                Mettre à jour le produit
+            </h2>
+            
+            {% from '_formhelpers.html' import render_field %}
+            <form method="POST" enctype="multipart/form-data">
+                {{ form.csrf_token }}  <!-- Utilisez csrf_token au lieu de hidden_tag -->
+                
+                {{ render_field(form.name, class="form-control", placeholder="Nom du produit") }}
+                
+                <div class="form-group">
+                    <label>{{ form.price.label }}</label>
+                    {{ form.price(class="form-control", placeholder="Prix", step="0.01") }}
+                    {% if form.price.errors %}
+                        {% for error in form.price.errors %}
+                            <small class="text-danger">{{ error }}</small>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                
+                <!-- Reste du formulaire inchangé... -->
+                
+                <button type="submit" class="btn btn-primary">Mettre à jour</button>
+                <a href="{{url_for('admin')}}" class="btn btn-secondary">Annuler</a>
+            </form>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</div>
+{% endblock %}

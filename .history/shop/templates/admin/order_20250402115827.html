@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+{% block body_block %}
+<div class="container">
+    <h2 class="mt-4">Gestion des commandes</h2>
+    <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Utilisateur</th>
+                <th>Prix total</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.user.username }}</td>
+                <td>{{ order.total_price }} €</td>
+                <td>
+                    <form method="POST" action="{{ url_for('update_order', order_id=order.id) }}">
+                        <select name="status" class="form-control" onchange="this.form.submit()">
+                            <option value="En attente" {% if order.status == 'En attente' %}selected{% endif %}>En attente</option>
+                            <option value="En cours" {% if order.status == 'En cours' %}selected{% endif %}>En cours</option>
+                            <option value="Expédiée" {% if order.status == 'Expédiée' %}selected{% endif %}>Expédiée</option>
+                            <option value="Livrée" {% if order.status == 'Livrée' %}selected{% endif %}>Livrée</option>
+                        </select>
+                    </form>
+                </td>
+                <td>
+                    <a href="{{ url_for('order_details', order_id=order.id) }}" class="btn btn-info btn-sm">Détails</a>
+                    <form method="POST" action="{{ url_for('delete_order', order_id=order.id) }}" class="d-inline">
+                        <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

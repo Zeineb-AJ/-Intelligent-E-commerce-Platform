@@ -1,0 +1,272 @@
+{% extends 'layout.html' %}
+
+{% block body_block %}
+{% include 'navbar.html' %}
+
+<div class="netflix-hero">
+  <div class="hero-content">
+    <h1 class="hero-title">NOUVELLE COLLECTION</h1>
+    <p class="hero-subtitle">Découvrez les dernières tendances à prix imbattables</p>
+    <a href="{{url_for('new_arrivals')}}" class="btn btn-lg btn-danger hero-btn">
+      Voir maintenant <i class="fas fa-chevron-right ms-2"></i>
+    </a>
+  </div>
+</div>
+
+<div class="container-fluid netflix-style">
+  <!-- Section Tendances -->
+  <section class="product-section">
+    <h2 class="section-title"><span>Tendances du moment</span></h2>
+    <div class="product-carousel">
+      {% for product in trending_products %}
+      <div class="product-card">
+        <div class="product-badge">HOT</div>
+        <img src="{{url_for('static', filename='images/'+product.image_1)}}" alt="{{product.name}}" class="product-image">
+        <div class="product-overlay">
+          <h3>{{product.name}}</h3>
+          <p class="price">{{product.price}} DH</p>
+          <div class="product-actions">
+            <a href="{{url_for('product_details', id=product.id)}}" class="btn btn-sm btn-outline-light">Détails</a>
+            <form action="{{url_for('add_cart')}}" method="post" class="d-inline">
+              <input type="hidden" name="product_id" value="{{product.id}}">
+              <button type="submit" class="btn btn-sm btn-danger">Ajouter</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- Section Nouveautés -->
+  <section class="product-section">
+    <h2 class="section-title"><span>Nouveautés</span></h2>
+    <div class="product-carousel">
+      {% for product in new_products %}
+      <div class="product-card">
+        <div class="product-badge">NEW</div>
+        <img src="{{url_for('static', filename='images/'+product.image_1)}}" alt="{{product.name}}" class="product-image">
+        <div class="product-overlay">
+          <h3>{{product.name}}</h3>
+          <p class="price">{{product.price}} DH</p>
+          <div class="product-actions">
+            <a href="{{url_for('product_details', id=product.id)}}" class="btn btn-sm btn-outline-light">Détails</a>
+            <form action="{{url_for('add_cart')}}" method="post" class="d-inline">
+              <input type="hidden" name="product_id" value="{{product.id}}">
+              <button type="submit" class="btn btn-sm btn-danger">Ajouter</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- Section Soldes -->
+  <section class="product-section">
+    <h2 class="section-title"><span>Soldes exceptionnels</span></h2>
+    <div class="product-carousel">
+      {% for product in sale_products %}
+      <div class="product-card">
+        <div class="product-badge">-{{product.discount}}%</div>
+        <img src="{{url_for('static', filename='images/'+product.image_1)}}" alt="{{product.name}}" class="product-image">
+        <div class="product-overlay">
+          <h3>{{product.name}}</h3>
+          <p class="price">
+            <span class="original-price">{{product.original_price}} DH</span>
+            {{product.price}} DH
+          </p>
+          <div class="product-actions">
+            <a href="{{url_for('product_details', id=product.id)}}" class="btn btn-sm btn-outline-light">Détails</a>
+            <form action="{{url_for('add_cart')}}" method="post" class="d-inline">
+              <input type="hidden" name="product_id" value="{{product.id}}">
+              <button type="submit" class="btn btn-sm btn-danger">Ajouter</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+
+{% include 'footer.html' %}
+
+<style>
+  .netflix-hero {
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                url("{{url_for('static', filename='images/hero-bg.jpg')}}");
+    background-size: cover;
+    background-position: center;
+    height: 70vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin-bottom: 50px;
+  }
+  
+  .hero-content {
+    padding-left: 5%;
+    color: white;
+    max-width: 600px;
+  }
+  
+  .hero-title {
+    font-size: 3.5rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  
+  .hero-subtitle {
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  }
+  
+  .hero-btn {
+    padding: 12px 30px;
+    font-size: 1.2rem;
+    border-radius: 4px;
+    transition: all 0.3s;
+  }
+  
+  .hero-btn:hover {
+    transform: scale(1.05);
+  }
+  
+  .netflix-style {
+    padding: 0 50px;
+    margin-bottom: 50px;
+  }
+  
+  .product-section {
+    margin-bottom: 50px;
+  }
+  
+  .section-title {
+    color: white;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    position: relative;
+    display: inline-block;
+  }
+  
+  .section-title span {
+    position: relative;
+    z-index: 1;
+    padding-right: 20px;
+    background: #141414;
+  }
+  
+  .section-title::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #e50914;
+    z-index: 0;
+  }
+  
+  .product-carousel {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding: 20px 0;
+    scrollbar-width: none;
+  }
+  
+  .product-carousel::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .product-card {
+    min-width: 250px;
+    position: relative;
+    transition: transform 0.3s;
+    cursor: pointer;
+  }
+  
+  .product-card:hover {
+    transform: scale(1.05);
+  }
+  
+  .product-image {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+  
+  .product-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #e50914;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+    z-index: 2;
+  }
+  
+  .product-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+    padding: 20px;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  .product-card:hover .product-overlay {
+    opacity: 1;
+  }
+  
+  .price {
+    font-weight: bold;
+    color: #e50914;
+    font-size: 1.2rem;
+    margin: 10px 0;
+  }
+  
+  .original-price {
+    text-decoration: line-through;
+    color: #757575;
+    font-size: 0.9rem;
+    margin-right: 10px;
+  }
+  
+  .product-actions {
+    display: flex;
+    gap: 10px;
+  }
+</style>
+
+<script>
+  // Animation des sections
+  document.addEventListener('DOMContentLoaded', function() {
+    const sections = document.querySelectorAll('.product-section');
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = 1;
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+    
+    sections.forEach(section => {
+      section.style.opacity = 0;
+      section.style.transform = 'translateY(20px)';
+      section.style.transition = 'all 0.5s ease-out';
+      observer.observe(section);
+    });
+  });
+</script>
+{% endblock %}

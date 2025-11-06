@@ -1,0 +1,296 @@
+{% extends 'layout.html' %}
+
+{% block body_block %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Panneau publicitaire gauche (carrousel tournant) -->
+        <div class="col-md-2 d-none d-md-block">
+            <div class="sticky-top" style="top: 20px;">
+                <div id="promoCarousel" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                        <!-- Promotion 1 -->
+                        <div class="carousel-item active">
+                            <div class="card mb-3 border-danger">
+                                <div class="card-body text-center">
+                                    <h5 class="text-danger font-weight-bold">TÉLÉCHARGEZ L'APP KSZ</h5>
+                                    <p class="small">et identifiez des réductions</p>
+                                    <hr>
+                                    <h6 class="text-danger">TOUT À MOINS DE 1,99€</h6>
+                                    <a href="#" class="btn btn-sm btn-outline-danger mt-2">Voir plus</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Promotion 2 -->
+                        <div class="carousel-item">
+                            <div class="card mb-3 border-warning">
+                                <div class="card-body text-center">
+                                    <h5 class="text-warning font-weight-bold">MEILLEURES VENTES</h5>
+                                    <p class="text-muted">À PRIX BAS</p>
+                                    <img src="{{url_for('static', filename='images/bestseller.png')}}" class="img-fluid mb-2" style="max-height: 80px;">
+                                    <a href="#" class="btn btn-sm btn-outline-warning">Voir plus</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Promotion 3 -->
+                        <div class="carousel-item">
+                            <div class="card mb-3 border-info">
+                                <div class="card-body text-center">
+                                    <h5 class="text-info font-weight-bold">KSZ CLUB</h5>
+                                    <p class="small">5% sur 100k+ articles</p>
+                                    <p class="small">15x coupons Livraison Gratuite</p>
+                                    <i class="fas fa-crown text-warning fa-2x mb-2"></i>
+                                    <button class="btn btn-sm btn-info">Rejoindre</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>{% extends 'layout.html' %}
+
+                    {% block body_block %}
+                    <div class="container-fluid">
+                        <div class="row">
+                            <!-- Panneau publicitaire gauche (carrousel dynamique) -->
+                            <div class="col-md-2 d-none d-md-block">
+                                <div class="sticky-top" style="top: 20px;">
+                                    <div id="promoCarousel" class="carousel slide" data-ride="carousel">
+                                        <div class="carousel-inner">
+                                            {% for promo_product in promo_products %}
+                                            <div class="carousel-item {{ 'active' if loop.first else '' }}">
+                                                <div class="card mb-3 border-danger">
+                                                    <div class="card-body text-center">
+                                                        <img src="{{url_for('static', filename='images/'+promo_product.image_1)}}" 
+                                                             alt="{{promo_product.name}}" class="img-fluid mb-2" style="max-height: 120px;">
+                                                        <h5 class="text-danger font-weight-bold">{{promo_product.name}}</h5>
+                                                        <p class="text-center">
+                                                            <span class="text-muted"><del>{{ "%.2f"|format(promo_product.price*1.2) }}€</del></span>
+                                                            <span class="font-weight-bold text-danger ml-2">{{ "%.2f"|format(promo_product.price) }}€</span>
+                                                        </p>
+                                                        <a href="{{url_for('product_details', id=promo_product.id)}}" class="btn btn-sm btn-danger">Voir l'offre</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Section promotion fixe -->
+                                    <div class="card mt-3 border-primary">
+                                        <div class="card-body text-center">
+                                            <h6 class="text-primary">15% DE RÉDUCTION</h6>
+                                            <p class="small">supplémentaire par commande</p>
+                                            <form action="{{url_for('add_cart')}}" method="post" class="mt-2">
+                                                <input type="hidden" name="product_id" value="{{promo_products[0].id if promo_products else ''}}">
+                                                <button type="submit" class="btn btn-sm btn-primary">J'en profite</button>
+                                                <input type="hidden" name="quantity" value="1">
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    
+                            <!-- Contenu principal (votre code existant) -->
+                            <div class="col-md-8">
+                                [VOTRE CODE EXISTANT ICI - identique à votre version précédente]
+                            </div>
+                    
+                            <!-- Panneau droit avec produits tendance -->
+                            <div class="col-md-2 d-none d-md-block">
+                                <div class="sticky-top" style="top: 20px;">
+                                    <div class="card mb-3 border-success">
+                                        <div class="card-header bg-success text-white">
+                                            <h6 class="mb-0">TENDANCES DU MOMENT</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            {% for trend_product in trend_products %}
+                                            <div class="mb-3">
+                                                <img src="{{url_for('static', filename='images/'+trend_product.image_1)}}" 
+                                                     alt="{{trend_product.name}}" class="img-fluid mb-1">
+                                                <p class="small mb-1">{{trend_product.name}}</p>
+                                                <p class="font-weight-bold text-success mb-0">{{ "%.2f"|format(trend_product.price) }}€</p>
+                                            </div>
+                                            {% if not loop.last %}<hr>{% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <script>
+                        $(document).ready(function(){
+                            $('#promoCarousel').carousel({
+                                interval: 5000,
+                                pause: "hover"
+                            });
+                        });
+                    </script>
+                    {% endblock body_block %}
+                </div>
+                
+                <!-- Section supplémentaire sous le carrousel -->
+                <div class="card mt-3 border-primary">
+                    <div class="card-body text-center">
+                        <h6 class="text-primary">15% DE RÉDUCTION</h6>
+                        <p class="small">supplémentaire par commande</p>
+                        <img src="{{url_for('static', filename='images/discount.png')}}" class="img-fluid" style="max-height: 60px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contenu principal - Votre code original -->
+        <div class="col-md-8">
+            <div class="row mt-2">
+                {% if brand %}
+                    {% for b in brand.items %}
+                    <div class="col-lg-3 col-md-4 col-sm-6 d-flex align-items-stretch">
+                        <div class="card mt-2">
+                            <div class="card-body">
+                                <img src="{{url_for('static', filename='images/'+b.image_1)}}" 
+                                    alt="{{b.name}}" class="card-img-top">
+                                <h5 class="text-center">{{b.name}}</h5>
+                                <p class="text-center">Price:{{b.price}}</p>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{{url_for('product_details', id=b.id)}}" class="float-left btn-sm btn-info">Details</a>
+                                <form action="{{url_for('add_cart')}}" method="post">
+                                    <input type="hidden" name="product_id" value="{{b.id}}">
+                                    <button type="submit" class="float-right btn btn-sm btn-warning">Add to Cart</button>
+                                    <input type="hidden" name="quantity" id='' value="1" min="1" max="{{b.stock}}">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="row text-center">
+                    <div class="col text-center mt-4">
+                        {% if brand.has_prev %}
+                            <a href="{{url_for('get_brand', id=get_b.id, page=brand.prev_num)}}" class="btn btn-outline-info btn-sm"> Previous</a>
+                        {% endif %}
+                        {% for page_num in brand.iter_pages(left_edge=1, right_edge=2, left_current=1, right_current=2) %}
+                            {% if page_num %}
+                                {% if brand.page == page_num %}
+                                <a href="{{url_for('get_brand', id=get_b.id, page=page_num)}}" class="btn btn-info btn-sm disabled" > {{page_num}}</a>
+                                {% else %}
+                                <a href="{{url_for('get_brand', id=get_b.id, page=page_num)}}" class="btn btn-outline-info btn-sm"> {{page_num}}</a>
+                                {% endif %}
+                           {% else %}
+                           ...
+                           {% endif %}
+                        {% endfor %}
+                        {% if brand.has_next %}
+                            <a href="{{url_for('get_brand', id=get_b.id, page=brand.next_num)}}" class="btn btn-outline-info btn-sm">Next</a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row mt-2">
+                {% elif category %}
+                    {% for c in category.items %}
+                    <div class="col-lg-3 col-md-4 col-sm-6 d-flex align-items-stretch">
+                        <div class="card mt-2">
+                            <div class="card-body">
+                                <img src="{{url_for('static', filename='images/'+c.image_1)}}" 
+                                    alt="{{c.name}}" class="card-img-top">
+                                <h5 class="text-center">{{c.name}}</h5>
+                                <p class="text-center">Price:{{c.price}}</p>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{{url_for('product_details', id=c.id)}}" class="float-left btn-sm btn-info">Details</a>
+                                <form action="{{url_for('add_cart')}}" method="post">
+                                    <input type="hidden" name="product_id" value="{{c.id}}">
+                                    <button type="submit" class="float-right btn btn-sm btn-warning">Add to Cart</button>
+                                    <input type="hidden" name="quantity" id='' value="1" min="1" max="{{c.stock}}">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="row text-center">
+                    <div class="col text-center mt-4">
+                        {% if category.has_prev %}
+                            <a href="{{url_for('get_category', id=get_cat.id, page=category.prev_num)}}" class="btn btn-outline-info btn-sm"> Previous</a>
+                        {% endif %}
+                        {% for page_num in category.iter_pages(left_edge=1, right_edge=2, left_current=1, right_current=2) %}
+                            {% if page_num %}
+                                {% if category.page == page_num %}
+                                <a href="{{url_for('get_category', id=get_cat.id, page=page_num)}}" class="btn btn-info btn-sm disabled" > {{page_num}}</a>
+                                {% else %}
+                                <a href="{{url_for('get_category', id=get_cat.id, page=page_num)}}" class="btn btn-outline-info btn-sm"> {{page_num}}</a>
+                                {% endif %}
+                           {% else %}
+                           ...
+                           {% endif %}
+                        {% endfor %}
+                        {% if category.has_next %}
+                            <a href="{{url_for('get_category', id=get_cat.id, page=category.next_num)}}" class="btn btn-outline-info btn-sm">Next</a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row mt-2">
+                {% else %}
+                    {% for product in products.items %}
+                    <div class="col-lg-3 col-md-4 col-sm-6 d-flex align-items-stretch">
+                        <div class="card mt-3 mb-3">
+                            <div class="card-body">
+                                <img src="{{url_for('static', filename='images/'+product.image_1)}}" 
+                                    alt="{{product.name}}" class="card-img-top">
+                                <h5 class="text-center">{{product.name}}</h5>
+                                <p class="text-center">{{product.brand.name}}</p>
+                                <p class="text-center">Price:{{product.price}}</p>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{{url_for('product_details', id=product.id)}}" class="float-left btn-sm btn-info">Details</a>
+                                <form action="{{url_for('add_cart')}}" method="post">
+                                    <input type="hidden" name="product_id" value="{{product.id}}">
+                                    <button type="submit" class="float-right btn btn-sm btn-warning">Add to Cart</button>
+                                    <input type="hidden" name="quantity" id='' value="1" min="1" max="{{product.stock}}">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="row text-center">
+                    <div class="col text-center mt-4">
+                        {% if products.has_prev %}
+                            <a href="{{url_for('home', page=products.prev_num)}}" class="btn btn-outline-info btn-sm"> Previous</a>
+                        {% endif %}
+                        {% for page_num in products.iter_pages(left_edge=1, right_edge=2, left_current=1, right_current=2) %}
+                            {% if page_num %}
+                                {% if products.page == page_num %}
+                                <a href="{{url_for('home', page=page_num)}}" class="btn btn-info btn-sm disabled" > {{page_num}}</a>
+                                {% else %}
+                                <a href="{{url_for('home', page=page_num)}}" class="btn btn-outline-info btn-sm"> {{page_num}}</a>
+                                {% endif %}
+                           {% else %}
+                           ...
+                           {% endif %}
+                        {% endfor %}
+                        {% if products.has_next %}
+                            <a href="{{url_for('home', page=products.next_num)}}" class="btn btn-outline-info btn-sm">Next</a>
+                        {% endif %}
+                    </div>
+                </div>
+                <br>
+                {% endif %}
+            </div>
+        </div>
+
+       
+    </div>
+</div>
+
+<!-- Script pour le carrousel automatique -->
+<script>
+    $(document).ready(function(){
+        $('#promoCarousel').carousel({
+            interval: 4000, // Rotation toutes les 4 secondes
+            pause: "hover" // Pause au survol
+        });
+    });
+</script>
+{% endblock body_block %}

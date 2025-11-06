@@ -1,0 +1,322 @@
+{% extends 'layout.html' %}
+
+{% block body_block %}
+<style>
+    .product-card {
+        transition: all 0.3s;
+        border: none;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .discount-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #ff3e6c;
+        color: white;
+        padding: 3px 8px;
+        border-radius: 10px;
+        font-size: 0.7rem;
+    }
+    .current-price {
+        color: #ff3e6c;
+        font-weight: bold;
+    }
+    .original-price {
+        text-decoration: line-through;
+        color: #939393;
+        font-size: 0.9rem;
+    }
+    .category-link {
+        color: #333;
+        display: block;
+        padding: 8px 15px;
+        border-bottom: 1px solid #eee;
+        text-decoration: none;
+    }
+    .category-link:hover {
+        color: #ff3e6c;
+        background-color: #f8f9fa;
+    }
+</style>
+
+<div class="container-fluid px-0">
+    <!-- Top banner -->
+    <div class="bg-light py-2 mb-3">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <small class="text-muted">Download the KSZ app and get exclusive discounts</small>
+                </div>
+                <div class="col-md-6 text-right">
+                    <small><a href="#" class="text-dark font-weight-bold">Everything under $1.99</a></small>
+                    <small class="mx-2">|</small>
+                    <small><a href="#" class="text-dark font-weight-bold">BESTSELLERS AT LOW PRICES</a></small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <!-- Left Column - Categories -->
+            <div class="col-lg-2 d-none d-lg-block">
+                <div class="sticky-top" style="top: 20px;">
+                    <div class="card mb-3 border-0">
+                        <div class="card-body p-0">
+                            <h6 class="font-weight-bold px-3 py-2">Categories</h6>
+                            <div class="list-group list-group-flush">
+                                {% for category in categories %}
+                                <a href="{{ url_for('get_category', id=category.id) }}" class="category-link">
+                                    {{ category.name }}
+                                </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card border-0 mt-3" style="background-color: #f8f9fa;">
+                        <div class="card-body text-center">
+                            <h6 class="font-weight-bold">KSZ CLUB</h6>
+                            <p class="small">5% off on 100k+ items</p>
+                            <p class="small">15x Free Shipping Coupons</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Center Column - Products -->
+            <div class="col-lg-8">
+                <!-- Promotional banner -->
+                <div class="card bg-dark text-white mb-3 border-0">
+                    <img src="{{url_for('static', filename='images/banner.jpg')}}" class="card-img" alt="Promotion">
+                    <div class="card-img-overlay d-flex flex-column justify-content-center">
+                        <h5 class="card-title">Repair, Reuse, Recycle</h5>
+                        <p class="card-text">Every action counts</p>
+                        <button class="btn btn-light btn-sm align-self-start mt-2" style="background-color: #ff3e6c; color: white;">Act Now!</button>
+                    </div>
+                </div>
+
+                <!-- Products grid -->
+                <div class="row">
+                    {% if brand %}
+                        {% for b in brand.items %}
+                        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                            <div class="product-card h-100">
+                                {% if b.discount > 0 %}
+                                <span class="discount-badge">-{{b.discount}}%</span>
+                                {% endif %}
+                                <img src="{{url_for('static', filename='images/'+b.image_1)}}" class="card-img-top" alt="{{b.name}}">
+                                <div class="card-body">
+                                    <h6 class="card-title">{{b.name}}</h6>
+                                    <p>
+                                        {% if b.discount > 0 %}
+                                        <span class="current-price">${{ "%.2f"|format(b.price) }}</span>
+                                        <span class="original-price">${{ "%.2f"|format(b.price*(1 + b.discount/100)) }}</span>
+                                        {% else %}
+                                        <span class="current-price">${{ "%.2f"|format(b.price) }}</span>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                                <div class="card-footer bg-white border-0">
+                                    <a href="{{url_for('product_details', id=b.id)}}" class="btn btn-sm btn-outline-info">Details</a>
+                                    <form action="{{url_for('add_cart')}}" method="post" class="d-inline">
+                                        <input type="hidden" name="product_id" value="{{b.id}}">
+                                        <button type="submit" class="btn btn-sm" style="background-color: #ff3e6c; color: white;">Add to Cart</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% elif category %}
+                        {% for c in category.items %}
+                        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                            <div class="product-card h-100">
+                                {% if c.discount > 0 %}
+                                <span class="discount-badge">-{{c.discount}}%</span>
+                                {% endif %}
+                                <img src="{{url_for('static', filename='images/'+c.image_1)}}" class="card-img-top" alt="{{c.name}}">
+                                <div class="card-body">
+                                    <h6 class="card-title">{{c.name}}</h6>
+                                    <p>
+                                        {% if c.discount > 0 %}
+                                        <span class="current-price">${{ "%.2f"|format(c.price) }}</span>
+                                        <span class="original-price">${{ "%.2f"|format(c.price*(1 + c.discount/100)) }}</span>
+                                        {% else %}
+                                        <span class="current-price">${{ "%.2f"|format(c.price) }}</span>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                                <div class="card-footer bg-white border-0">
+                                    <a href="{{url_for('product_details', id=c.id)}}" class="btn btn-sm btn-outline-info">Details</a>
+                                    <form action="{{url_for('add_cart')}}" method="post" class="d-inline">
+                                        <input type="hidden" name="product_id" value="{{c.id}}">
+                                        <button type="submit" class="btn btn-sm" style="background-color: #ff3e6c; color: white;">Add to Cart</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        {% for product in products.items %}
+                        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                            <div class="product-card h-100">
+                                {% if product.discount > 0 %}
+                                <span class="discount-badge">-{{product.discount}}%</span>
+                                {% endif %}
+                                <img src="{{url_for('static', filename='images/'+product.image_1)}}" class="card-img-top" alt="{{product.name}}">
+                                <div class="card-body">
+                                    <h6 class="card-title">{{product.name}}</h6>
+                                    <p class="text-muted small">{{product.brand.name}}</p>
+                                    <p>
+                                        {% if product.discount > 0 %}
+                                        <span class="current-price">${{ "%.2f"|format(product.price) }}</span>
+                                        <span class="original-price">${{ "%.2f"|format(product.price*(1 + product.discount/100)) }}</span>
+                                        {% else %}
+                                        <span class="current-price">${{ "%.2f"|format(product.price) }}</span>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                                <div class="card-footer bg-white border-0">
+                                    <a href="{{url_for('product_details', id=product.id)}}" class="btn btn-sm btn-outline-info">Details</a>
+                                    <form action="{{url_for('add_cart')}}" method="post" class="d-inline">
+                                        <input type="hidden" name="product_id" value="{{product.id}}">
+                                        <button type="submit" class="btn btn-sm" style="background-color: #ff3e6c; color: white;">Add to Cart</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <!-- Pagination -->
+                <div class="row text-center">
+                    <div class="col text-center mt-4">
+                        {% if brand and brand.has_prev %}
+                            <a href="{{url_for('get_brand', id=get_b.id, page=brand.prev_num)}}" class="btn btn-outline-info btn-sm">Previous</a>
+                        {% elif category and category.has_prev %}
+                            <a href="{{url_for('get_category', id=get_cat.id, page=category.prev_num)}}" class="btn btn-outline-info btn-sm">Previous</a>
+                        {% elif products.has_prev %}
+                            <a href="{{url_for('home', page=products.prev_num)}}" class="btn btn-outline-info btn-sm">Previous</a>
+                        {% endif %}
+
+                        {% if brand %}
+                            {% for page_num in brand.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=1) %}
+                                {% if page_num %}
+                                    {% if brand.page == page_num %}
+                                    <a href="{{url_for('get_brand', id=get_b.id, page=page_num)}}" class="btn btn-info btn-sm disabled">{{ page_num }}</a>
+                                    {% else %}
+                                    <a href="{{url_for('get_brand', id=get_b.id, page=page_num)}}" class="btn btn-outline-info btn-sm">{{ page_num }}</a>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="btn btn-outline-info btn-sm disabled">...</span>
+                                {% endif %}
+                            {% endfor %}
+                        {% elif category %}
+                            {% for page_num in category.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=1) %}
+                                {% if page_num %}
+                                    {% if category.page == page_num %}
+                                    <a href="{{url_for('get_category', id=get_cat.id, page=page_num)}}" class="btn btn-info btn-sm disabled">{{ page_num }}</a>
+                                    {% else %}
+                                    <a href="{{url_for('get_category', id=get_cat.id, page=page_num)}}" class="btn btn-outline-info btn-sm">{{ page_num }}</a>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="btn btn-outline-info btn-sm disabled">...</span>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            {% for page_num in products.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=1) %}
+                                {% if page_num %}
+                                    {% if products.page == page_num %}
+                                    <a href="{{url_for('home', page=page_num)}}" class="btn btn-info btn-sm disabled">{{ page_num }}</a>
+                                    {% else %}
+                                    <a href="{{url_for('home', page=page_num)}}" class="btn btn-outline-info btn-sm">{{ page_num }}</a>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="btn btn-outline-info btn-sm disabled">...</span>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+
+                        {% if brand and brand.has_next %}
+                            <a href="{{url_for('get_brand', id=get_b.id, page=brand.next_num)}}" class="btn btn-outline-info btn-sm">Next</a>
+                        {% elif category and category.has_next %}
+                            <a href="{{url_for('get_category', id=get_cat.id, page=category.next_num)}}" class="btn btn-outline-info btn-sm">Next</a>
+                        {% elif products.has_next %}
+                            <a href="{{url_for('home', page=products.next_num)}}" class="btn btn-outline-info btn-sm">Next</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column - Special Offers -->
+            <div class="col-lg-2 d-none d-lg-block">
+                <div class="sticky-top" style="top: 20px;">
+                    <div class="card border-0 mb-3" style="background-color: #f8f9fa;">
+                        <div class="card-body text-center">
+                            <h6 class="font-weight-bold">SPECIAL OFFER</h6>
+                            <p class="small">Extra 15% discount</p>
+                            <button class="btn btn-sm btn-block mt-2" style="background-color: #ff3e6c; color: white;"
+                                    data-toggle="modal" data-target="#couponModal">
+                                Promo Code
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card border-0 mt-3">
+                        <div class="card-header bg-white border-0">
+                            <h6 class="font-weight-bold mb-0">BESTSELLERS</h6>
+                        </div>
+                        <div class="card-body p-0">
+                            {% for trend_product in trend_products[:3] %}
+                            <div class="p-2 border-bottom">
+                                <img src="{{url_for('static', filename='images/'+trend_product.image_1)}}" 
+                                     class="img-fluid mb-1" alt="{{trend_product.name}}">
+                                <p class="small font-weight-bold mb-1">{{trend_product.name}}</p>
+                                <p class="current-price mb-0">${{ "%.2f"|format(trend_product.price) }}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Promo Code Modal -->
+<div class="modal fade" id="couponModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">Promo Code</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <h3 class="text-danger">KSZ15</h3>
+                <p>Use this code for 15% discount</p>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn" style="background-color: #ff3e6c; color: white;" onclick="copyCoupon()">Copy Code</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function copyCoupon() {
+        navigator.clipboard.writeText("KSZ15");
+        alert("Promo code copied!");
+        $('#couponModal').modal('hide');
+    }
+</script>
+{% endblock %}

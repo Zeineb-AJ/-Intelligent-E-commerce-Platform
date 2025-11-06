@@ -1,0 +1,145 @@
+{% extends 'layout.html' %}
+
+{% block body_block %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Colonne Gauche (20%) -->
+        <div class="col-md-2">
+            <!-- Menu Navigation -->
+            <div class="card mb-3">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">KSZ</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="{{url_for('home')}}">All Products</a></li>
+                        <li class="mb-2"><a href="{{url_for('brands')}}">Brands</a></li>
+                        <li class="mb-2"><a href="{{url_for('categories')}}">Categories</a></li>
+                        <hr>
+                        <li class="mb-2"><a href="{{url_for('login')}}">Login</a></li>
+                        <li class="mb-2"><a href="{{url_for('register')}}">Sign Up</a></li>
+                    </ul>
+                    
+                    <!-- Barre de recherche -->
+                    <form class="mt-3">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="submit">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Offre spéciale -->
+            <div class="card mb-3 border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h6 class="mb-0">OFFICE SPECIALE</h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2">US: supplemented</li>
+                        <li class="mb-2">sur vous lire commande</li>
+                        <li class="mb-2">cool phone</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Colonne Centrale (60%) -->
+        <div class="col-md-7">
+            <!-- TOP VENTES -->
+            <div class="card mb-3">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">TOP VENTES</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Produit 1 -->
+                        <div class="col-md-6 mb-3">
+                            <div class="card">
+                                <img src="{{url_for('static', filename='images/pantalon.jpg')}}" class="card-img-top">
+                                <div class="card-body">
+                                    <h6>Pantalon</h6>
+                                    <p class="text-success font-weight-bold">80.00€</p>
+                                    <button class="btn btn-sm btn-success">Ajouter</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Produit 2 -->
+                        <div class="col-md-6 mb-3">
+                            <div class="card">
+                                <img src="{{url_for('static', filename='images/robe.jpg')}}" class="card-img-top">
+                                <div class="card-body">
+                                    <h6>Robe</h6>
+                                    <p class="text-success font-weight-bold">250.00€</p>
+                                    <button class="btn btn-sm btn-success">Ajouter</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Produits -->
+            <div class="row">
+                {% for product in products %}
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <img src="{{url_for('static', filename='images/' + product.image)}}" class="card-img-top">
+                        <div class="card-body">
+                            <h6>{{ product.name }}</h6>
+                            <p class="font-weight-bold">{{ product.price }}€</p>
+                            <button class="btn btn-sm btn-primary">Add to cart</button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Colonne Droite (20%) -->
+        <div class="col-md-3">
+            <!-- NOUVEAUTÉS -->
+            <div class="card mb-3 border-info">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">NOUVEAUTÉS</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <img src="{{url_for('static', filename='images/patch.jpg')}}" class="img-fluid mb-2">
+                        <h6>Patch</h6>
+                        <p class="font-weight-bold">28.00€</p>
+                        <button class="btn btn-sm btn-info">Add to cart</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Autres éléments -->
+            <div class="card">
+                <div class="card-body">
+                    <p class="small text-muted">Active: Windows<br>
+                    Accédez aux paramètres pour activer Windows.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        transition: transform 0.3s;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    .card-header {
+        font-size: 1rem;
+    }
+</style>
+{% endblock %}

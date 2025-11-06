@@ -1,0 +1,249 @@
+{% extends 'layout.html' %}
+
+{% block body_block %}
+<style>
+    :root {
+        --primary-color: #ff3e6c;
+        --secondary-color: #6c757d;
+        --light-bg: #f8f9fa;
+        --dark-text: #343a40;
+    }
+
+    /* Styles for the promotional carousel */
+    .promo-carousel {
+        background: white;
+        border-radius: 10px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(255, 62, 108, 0.1);
+    }
+    
+    .promo-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    
+    .promo-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--dark-text);
+        margin-bottom: 5px;
+    }
+    
+    .promo-subtitle {
+        font-size: 1rem;
+        color: var(--secondary-color);
+    }
+    
+    .promo-slider {
+        display: flex;
+        transition: transform 0.5s ease;
+    }
+    
+    .promo-slide {
+        min-width: 100%;
+        padding: 15px;
+        text-align: center;
+        background-size: cover;
+        background-position: center;
+        border-radius: 8px;
+    }
+    
+    .promo-badge {
+        background: var(--primary-color);
+        color: white;
+        padding: 8px 20px;
+        border-radius: 25px;
+        font-weight: bold;
+        font-size: 1.3rem;
+        display: inline-block;
+        margin-bottom: 15px;
+        box-shadow: 0 3px 10px rgba(255, 62, 108, 0.3);
+    }
+    
+    .promo-text {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+        font-weight: 500;
+        color: var(--dark-text);
+    }
+    
+    .promo-note {
+        font-size: 0.85rem;
+        color: var(--secondary-color);
+        margin-top: 15px;
+        font-style: italic;
+    }
+    
+    .promo-controls {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+    
+    .promo-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #ddd;
+        margin: 0 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .promo-dot:hover, 
+    .promo-dot.active {
+        background: var(--primary-color);
+        transform: scale(1.2);
+    }
+
+    /* Existing styles (optimized) */
+    .product-card {
+        transition: all 0.3s;
+        border: none;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+        margin-bottom: 25px;
+        background: white;
+    }
+    
+    .discount-badge {
+        background: var(--primary-color);
+        /* ... other existing styles ... */
+    }
+    
+    /* Pagination styles */
+    .custom-pagination .page-link {
+        color: var(--primary-color);
+        border: 1px solid var(--primary-color);
+    }
+    
+    .custom-pagination .page-item.active .page-link {
+        background: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+</style>
+
+<div class="container-fluid">
+    <!-- Existing Top Banner -->
+    <div class="banner" style="background: linear-gradient(to right, var(--primary-color), #ff6b8b);">
+        <!-- ... your existing banner content ... -->
+    </div>
+
+    <!-- New Promotional Carousel -->
+    <div class="promo-carousel">
+        <div class="promo-header">
+            <div>
+                <div class="promo-title">La météo varie, le style s'adapte</div>
+                <div class="promo-subtitle">Gusqu'à</div>
+            </div>
+        </div>
+        
+        <div class="promo-slider" id="promoSlider">
+            <!-- Slide 1 (Main Promotion) -->
+            <div class="promo-slide">
+                <div class="promo-badge">-65%</div>
+                <div class="promo-text">ET BIEN D'AUTRES OFFRES</div>
+                <div class="promo-note">*Sur une sélection d'articles uniquement</div>
+            </div>
+            
+            <!-- Slide 2 (Example Promotion) -->
+            <div class="promo-slide" style="background-color: rgba(255, 62, 108, 0.05);">
+                <div class="promo-badge">Nouveautés</div>
+                <div class="promo-text">DÉCOUVREZ NOTRE NOUVELLE COLLECTION</div>
+                <div class="promo-note">*Livraison offerte dès 50€</div>
+            </div>
+            
+            <!-- Slide 3 (Example Promotion) -->
+            <div class="promo-slide" style="background-color: rgba(255, 62, 108, 0.05);">
+                <div class="promo-badge">Exclusivité</div>
+                <div class="promo-text">MEMBRES KSZ CLUB: -15% SUPPLÉMENTAIRE</div>
+                <div class="promo-note">*Valable jusqu'au 31/12</div>
+            </div>
+        </div>
+        
+        <div class="promo-controls">
+            <div class="promo-dot active" data-slide="0"></div>
+            <div class="promo-dot" data-slide="1"></div>
+            <div class="promo-dot" data-slide="2"></div>
+        </div>
+    </div>
+
+    <!-- Main Content Layout -->
+    <div class="row">
+        <!-- Left Navigation Column -->
+        <div class="col-md-3">
+            <!-- ... your existing categories and KSZ club section ... -->
+        </div>
+
+        <!-- Main Products Column -->
+        <div class="col-md-6">
+            <!-- ... your existing products grid ... -->
+            
+            <!-- Pagination -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center custom-pagination">
+                            <!-- ... your existing pagination logic ... -->
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Sidebar Column -->
+        <div class="col-md-3">
+            <!-- ... your existing special offers and top sellers ... -->
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Carousel -->
+<script>
+    $(document).ready(function() {
+        const slider = $('#promoSlider');
+        const dots = $('.promo-dot');
+        let currentSlide = 0;
+        const slideCount = $('.promo-slide').length;
+        let autoSlideInterval;
+        
+        function goToSlide(n) {
+            currentSlide = (n + slideCount) % slideCount;
+            slider.css('transform', `translateX(-${currentSlide * 100}%)`);
+            dots.removeClass('active');
+            dots.eq(currentSlide).addClass('active');
+        }
+        
+        function startAutoSlide() {
+            autoSlideInterval = setInterval(() => {
+                goToSlide(currentSlide + 1);
+            }, 5000);
+        }
+        
+        // Start auto-sliding
+        startAutoSlide();
+        
+        // Pause on hover
+        $('.promo-carousel').hover(
+            () => clearInterval(autoSlideInterval),
+            () => startAutoSlide()
+        );
+        
+        // Manual controls
+        dots.click(function() {
+            clearInterval(autoSlideInterval);
+            goToSlide(parseInt($(this).data('slide')));
+            startAutoSlide();
+        });
+    });
+</script>
+
+<!-- ... rest of your existing code (modals, etc) ... -->
+{% endblock %}

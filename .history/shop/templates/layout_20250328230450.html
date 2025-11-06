@@ -1,0 +1,150 @@
+<footer class="netflix-footer">
+  <div class="container py-5">
+    <div class="row">
+      <div class="col-md-3 mb-4">
+        <h5 class="footer-heading">Navigation</h5>
+        <ul class="footer-links">
+          <li><a href="/">Accueil</a></li>
+          <li><a href="{{url_for('products')}}">Boutique</a></li>
+          <li><a href="{{url_for('new_arrivals')}}">Nouveautés</a></li>
+          <li><a href="{{url_for('sale')}}">Soldes</a></li>
+        </ul>
+      </div>
+      
+      <div class="col-md-3 mb-4">
+        <h5 class="footer-heading">Aide</h5>
+        <ul class="footer-links">
+          <li><a href="{{url_for('faq')}}">FAQ</a></li>
+          <li><a href="{{url_for('shipping')}}">Livraison</a></li>
+          <li><a href="{{url_for('returns')}}">Retours</a></li>
+          <li><a href="{{url_for('contact')}}">Contact</a></li>
+        </ul>
+      </div>
+      
+      <div class="col-md-3 mb-4">
+        <h5 class="footer-heading">Légal</h5>
+        <ul class="footer-links">
+          <li><a href="{{url_for('terms')}}">Conditions</a></li>
+          <li><a href="{{url_for('privacy')}}">Confidentialité</a></li>
+          <li><a href="{{url_for('cookies')}}">Cookies</a></li>
+        </ul>
+      </div>
+      
+      <div class="col-md-3 mb-4">
+        <h5 class="footer-heading">Réseaux sociaux</h5>
+        <div class="social-icons">
+          <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-tiktok"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+        </div>
+        
+        <div class="mt-4">
+          <h5 class="footer-heading">Newsletter</h5>
+          <form class="newsletter-form">
+            <div class="input-group">
+              <input type="email" class="form-control" placeholder="Votre email">
+              <button class="btn btn-danger" type="submit">
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <div class="row">
+        <div class="col-md-6">
+          <p class="mb-0">&copy; 2023 KSZ Shop. Tous droits réservés.</p>
+        </div>
+        <div class="col-md-6 text-md-end">
+          <img src="{{url_for('static', filename='images/payment-methods.png')}}" alt="Méthodes de paiement" class="payment-methods">
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .netflix-footer {
+    background-color: #141414;
+    color: #757575;
+    border-top: 8px solid #333;
+  }
+  
+  .footer-heading {
+    color: #fff;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    position: relative;
+    padding-bottom: 10px;
+  }
+  
+  .footer-heading::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 40px;
+    height: 2px;
+    background: #e50914;
+  }
+  
+  .footer-links {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .footer-links li {
+    margin-bottom: 10px;
+  }
+  
+  .footer-links a {
+    color: #757575;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  
+  .footer-links a:hover {
+    color: #e50914;
+    text-decoration: underline;
+  }
+  
+  .social-icons {
+    display: flex;
+    gap: 15px;
+  }
+  
+  .social-icon {
+    color: #fff;
+    font-size: 1.5rem;
+    transition: transform 0.3s;
+  }
+  
+  .social-icon:hover {
+    color: #e50914;
+    transform: scale(1.2);
+  }
+  
+  .newsletter-form .form-control {
+    background-color: #333;
+    border: none;
+    color: #fff;
+  }
+  
+  .newsletter-form .btn {
+    padding: 0 15px;
+  }
+  
+  .payment-methods {
+    height: 30px;
+    filter: brightness(0.8);
+  }
+  
+  .footer-bottom {
+    border-top: 1px solid #333;
+    padding-top: 20px;
+    margin-top: 20px;
+  }
+</style>

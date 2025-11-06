@@ -1,0 +1,249 @@
+{% extends 'layout.html' %}
+
+{% block body_block %}
+<style>
+    .product-card {
+        transition: all 0.3s;
+        border: none;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .discount-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #ff3e6c;
+        color: white;
+        padding: 3px 8px;
+        border-radius: 10px;
+        font-size: 0.7rem;
+    }
+    .current-price {
+        color: #ff3e6c;
+        font-weight: bold;
+    }
+    .original-price {
+        text-decoration: line-through;
+        color: #939393;
+        font-size: 0.9rem;
+    }
+    .nav-tabs .nav-link.active {
+        color: #ff3e6c;
+        border-bottom: 2px solid #ff3e6c;
+    }
+    .nav-tabs .nav-link {
+        color: #333;
+        border: none;
+    }
+    .pink-btn {
+        background-color: #ff3e6c;
+        color: white;
+        border: none;
+    }
+    .pink-btn:hover {
+        background-color: #e0355c;
+        color: white;
+    }
+</style>
+
+<div class="container-fluid px-0">
+    <!-- Top banner -->
+    <div class="bg-light py-2 mb-3">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <small class="text-muted">Download the KSZ app and get exclusive discounts</small>
+                </div>
+                <div class="col-md-6 text-right">
+                    <small><a href="#" class="text-dark font-weight-bold">Everything under $1.99</a></small>
+                    <small class="mx-2">|</small>
+                    <small><a href="#" class="text-dark font-weight-bold">BESTSELLERS AT LOW PRICES</a></small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <!-- Left Column - Categories -->
+            <div class="col-lg-2 d-none d-lg-block">
+                <div class="sticky-top" style="top: 20px;">
+                    <div class="card mb-3 border-0">
+                        <div class="card-body p-0">
+                            <h6 class="font-weight-bold px-3 py-2">Categories</h6>
+                            <ul class="list-unstyled">
+                                <li class="px-3 py-2 border-bottom"><a href="#" class="text-dark">New Arrivals</a></li>
+                                <li class="px-3 py-2 border-bottom"><a href="#" class="text-dark">Royal Delivery</a></li>
+                                <li class="px-3 py-2 border-bottom"><a href="#" class="text-dark">Pro Deals</a></li>
+                                <li class="px-3 py-2 border-bottom"><a href="#" class="text-dark">Women's Clothing</a></li>
+                                <li class="px-3 py-2 border-bottom"><a href="#" class="text-dark">Beach Themes</a></li>
+                                <li class="px-3 py-2 border-bottom"><a href="#" class="text-dark">Large Canvases</a></li>
+                                <li class="px-3 py-2 border-bottom"><a href="#" class="text-dark">Home & Kitchen</a></li>
+                                <li class="px-3 py-2 border-bottom"><a href="#" class="text-dark">Men's Clothing</a></li>
+                                <li class="px-3 py-2 border-bottom"><a href="#" class="text-dark">Underwear & Sleepwear</a></li>
+                                <li class="px-3 py-2"><a href="#" class="text-dark">Kids</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card border-0 mt-3" style="background-color: #f8f9fa;">
+                        <div class="card-body text-center">
+                            <h6 class="font-weight-bold">KSZ CLUB</h6>
+                            <p class="small">5% off on 100k+ items</p>
+                            <p class="small">15x Free Shipping Coupons</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Center Column - Products -->
+            <div class="col-lg-8">
+                <!-- Promotional banner -->
+                <div class="card bg-dark text-white mb-3 border-0">
+                    <img src="{{url_for('static', filename='images/banner.jpg')}}" class="card-img" alt="Promotion">
+                    <div class="card-img-overlay d-flex flex-column justify-content-center">
+                        <h5 class="card-title">Repair, Reuse, Recycle</h5>
+                        <p class="card-text">Every action counts</p>
+                        <button class="btn btn-light btn-sm align-self-start mt-2 pink-btn">Act Now!</button>
+                    </div>
+                </div>
+
+                <!-- Trending now -->
+                <div class="mb-4">
+                    <h6 class="font-weight-bold mb-3">Trending Now</h6>
+                    <div class="d-flex flex-wrap">
+                        {% for i in range(1, 10) %}
+                        <span class="badge badge-light rounded-pill px-3 py-2 mr-2 mb-2">3.{{i}}K</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Products grid -->
+                <div class="row">
+                    {% for product in products.items %}
+                    <div class="col-md-4 col-6 mb-4">
+                        <div class="product-card h-100">
+                            {% if product.discount > 0 %}
+                            <span class="discount-badge">-{{product.discount}}%</span>
+                            {% endif %}
+                            <img src="{{url_for('static', filename='images/'+product.image_1)}}" class="card-img-top" alt="{{product.name}}">
+                            <div class="card-body p-2">
+                                <h6 class="card-title mb-1">{{product.name}}</h6>
+                                <p class="mb-1">
+                                    {% if product.discount > 0 %}
+                                    <span class="current-price">${{ "%.2f"|format(product.price) }}</span>
+                                    <span class="original-price ml-1">${{ "%.2f"|format(product.price*(1 + product.discount/100)) }}</span>
+                                    {% else %}
+                                    <span class="current-price">${{ "%.2f"|format(product.price) }}</span>
+                                    {% endif %}
+                                </p>
+                                <button class="btn btn-sm btn-block mt-2 pink-btn">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Pagination -->
+                <div class="d-flex justify-content-center mt-4">
+                    <ul class="pagination">
+                        {% if products.has_prev %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('home', page=products.prev_num) }}">Previous</a>
+                            </li>
+                        {% endif %}
+
+                        {% for num in products.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                            {% if num %}
+                                <li class="page-item {% if num == products.page %}active{% endif %}">
+                                    <a class="page-link" href="{{ url_for('home', page=num) }}">{{ num }}</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if products.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('home', page=products.next_num) }}">Next</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Right Column - Special Offers -->
+            <div class="col-lg-2 d-none d-lg-block">
+                <div class="sticky-top" style="top: 20px;">
+                    <div class="card border-0 mb-3" style="background-color: #f8f9fa;">
+                        <div class="card-body text-center">
+                            <h6 class="font-weight-bold">SPECIAL OFFER</h6>
+                            <p class="small">Extra 15% discount</p>
+                            <button class="btn btn-sm btn-block mt-2 pink-btn"
+                                    data-toggle="modal" data-target="#couponModal">
+                                Promo Code
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card border-0 mt-3">
+                        <div class="card-header bg-white border-0">
+                            <h6 class="font-weight-bold mb-0">BESTSELLERS</h6>
+                        </div>
+                        <div class="card-body p-0">
+                            {% for trend_product in trend_products[:3] %}
+                            <div class="p-2 border-bottom">
+                                <img src="{{url_for('static', filename='images/'+trend_product.image_1)}}" 
+                                     class="img-fluid mb-1" alt="{{trend_product.name}}">
+                                <p class="small font-weight-bold mb-1">{{trend_product.name}}</p>
+                                <p class="current-price mb-0">${{ "%.2f"|format(trend_product.price) }}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Promo Code Modal -->
+<div class="modal fade" id="couponModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">Promo Code</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <h3 class="text-danger">KSZ15</h3>
+                <p>Use this code for 15% discount</p>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn pink-btn" onclick="copyCoupon()">Copy Code</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function copyCoupon() {
+        navigator.clipboard.writeText("KSZ15");
+        alert("Promo code copied!");
+        $('#couponModal').modal('hide');
+    }
+    
+    // Initialize tooltips
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+</script>
+{% endblock %}

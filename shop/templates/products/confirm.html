@@ -1,0 +1,82 @@
+{% extends 'layout.html' %}
+
+{% block title %}Confirmation de Commande{% endblock %}
+
+{% block body_block %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2>Confirmation de Commande</h2>
+                </div>
+                
+                <div class="card-body">
+                    <!-- Afficher les messages flash -->
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }}">{{ message }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <!-- Afficher les erreurs de validation -->
+                    {% if form.errors %}
+                    <div class="alert alert-danger">
+                        <strong>Erreurs dans le formulaire:</strong>
+                        <ul>
+                            {% for field, errors in form.errors.items() %}
+                                {% for error in errors %}
+                                    <li>{{ form[field].label }}: {{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+
+                    <!-- Formulaire complet -->
+                    <form method="POST" action="{{ url_for('confirm_order') }}">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {{ form.gender.label(class="form-label") }}
+                                {{ form.gender(class="form-select") }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.age.label(class="form-label") }}
+                                {{ form.age(class="form-control") }}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.product_category.label(class="form-label") }}
+                            {{ form.product_category(class="form-select") }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.delivery_address.label(class="form-label") }}
+                            {{ form.delivery_address(class="form-control", rows=3) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.payment_method.label(class="form-label") }}
+                            {{ form.payment_method(class="form-select") }}
+                        </div>
+
+                        <!-- Champ caché pour price_per_unit -->
+                        <input type="hidden" name="price_per_unit" value="{{ form.price_per_unit.data }}">
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                Confirmer la Commande
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

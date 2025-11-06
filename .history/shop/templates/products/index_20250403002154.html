@@ -1,0 +1,69 @@
+{% extends 'layout.html' %}
+
+{% block body_block %}
+<style>
+    /* Styles généraux */
+    .container-fluid {
+        display: flex;
+    }
+    .sidebar {
+        width: 250px;
+        background: #f8f9fa;
+        padding: 15px;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        overflow-y: auto;
+    }
+    .main-content {
+        margin-left: 260px;
+        flex-grow: 1;
+        padding: 20px;
+    }
+    .pagination .page-item.active .page-link {
+        background-color: #ff3e6c;
+        border-color: #ff3e6c;
+    }
+    .pagination .page-link {
+        color: #ff3e6c;
+    }
+</style>
+
+<div class="container-fluid">
+    <!-- Sidebar (Navbar) -->
+    <div class="sidebar">
+        <h6 class="font-weight-bold">Categories</h6>
+        {% for category in categories %}
+        <a href="{{ url_for('get_category', id=category.id) }}" class="d-block py-2 text-dark">{{ category.name }}</a>
+        {% endfor %}
+    </div>
+
+    <!-- Contenu Principal -->
+    <div class="main-content">
+        <div class="row">
+            {% for product in products.items %}
+            <div class="col-lg-4 col-md-6 col-6 mb-4">
+                <div class="product-card">
+                    {% if product.discount > 0 %}
+                    <span class="discount-badge">-{{ product.discount }}%</span>
+                    {% endif %}
+                    <img src="{{ url_for('static', filename='images/'+product.image_1) }}" class="card-img-top" alt="{{ product.name }}">
+                    <div class="card-body">
+                        <h6 class="card-title">{{ product.name }}</h6>
+                        <p class="price">${{ "%.2f"|format(product.price) }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        <nav>
+            <ul class="pagination justify-content-center">
+                {{ products.links | safe }}
+            </ul>
+        </nav>
+    </div>
+</div>
+{% endblock %}

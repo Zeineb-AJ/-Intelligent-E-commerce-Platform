@@ -1,0 +1,28 @@
+{% extends 'layout.html' %}
+
+{% block body_block %}
+<div class="container mt-5">
+    <!-- Afficher les erreurs de validation -->
+    {% if form.errors %}
+    <div class="alert alert-danger">
+        <strong>Erreurs dans le formulaire:</strong>
+        <ul>
+            {% for field, errors in form.errors.items() %}
+                {% for error in errors %}
+                    <li>{{ form[field].label }}: {{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <!-- Reste du formulaire inchangé -->
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <!-- Ajoutez ce champ caché -->
+        <input type="hidden" name="price_per_unit" value="{{ form.price_per_unit.data }}">
+        
+        <!-- ... autres champs du formulaire ... -->
+    </form>
+</div>
+{% endblock %}

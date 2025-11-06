@@ -1,0 +1,124 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
+  <div class="container">
+      <a class="navbar-brand font-weight-bold" href="/" style="color: var(--primary-color); font-size: 1.8rem;">KSZ</a>
+      
+      <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+          <ul class="navbar-nav ml-auto">
+              <li class="nav-item mx-2">
+                  <a class="nav-link position-relative" href="{{url_for('get_cart')}}">
+                      <i class="fas fa-shopping-cart fa-lg"></i>
+                      {% if 'shopcart' in session and session['shopcart']|length > 0 %}
+                      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                          {{session['shopcart']|length}}
+                      </span>
+                      {% endif %}
+                  </a>
+              </li>
+              {% if current_user.is_authenticated %}
+              <li class="nav-item dropdown mx-2">
+                  <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown">
+                      <i class="fas fa-user-circle fa-lg"></i> {{current_user.name}}
+                  </a>
+                  <div class="dropdown-menu dropdown-menu-right">
+                      <a class="dropdown-item" href="#">Profile</a>
+                      <a class="dropdown-item" href="{{url_for('customerLogout')}}">Logout</a>
+                  </div>
+              </li>
+              {% else %}
+              <li class="nav-item mx-2">
+                  <a class="nav-link" href="{{url_for('customerLogin')}}">Login</a>
+              </li>
+              <li class="nav-item mx-2">
+                  <a class="btn btn-outline-primary" href="{{url_for('register_customer')}}">Sign Up</a>
+              </li>
+              {% endif %}
+          </ul>
+      </div>
+      
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNav">
+          <span class="navbar-toggler-icon"></span>
+      </button>
+      
+      <div class="collapse navbar-collapse" id="mainNav">
+          <ul class="navbar-nav mr-auto">
+              <li class="nav-item dropdown mx-2">
+                  <a class="nav-link dropdown-toggle" href="#" id="categoriesDropdown">Categories</a>
+                  <div class="dropdown-menu">
+                      {% for c in categories %}
+                      <a class="dropdown-item" href="{{url_for('get_category', id=c.id)}}">{{c.name}}</a>
+                      {% endfor %}
+                  </div>
+              </li>
+              <li class="nav-item dropdown mx-2">
+                  <a class="nav-link dropdown-toggle" href="#" id="brandsDropdown">Brands</a>
+                  <div class="dropdown-menu">
+                      {% for brand in brands %}
+                      <a class="dropdown-item" href="{{url_for('get_brand', id=brand.id)}}">{{brand.name}}</a>
+                      {% endfor %}
+                  </div>
+              </li>
+              <li class="nav-item mx-2">
+                  <a class="nav-link" href="#">New Arrivals</a>
+              </li>
+              <li class="nav-item mx-2">
+                  <a class="nav-link" href="#">Deals</a>
+              </li>
+          </ul>
+          
+          <form class="form-inline my-2 my-lg-0" action="/search" method="GET">
+              <div class="input-group">
+                  <input class="form-control" type="search" placeholder="Search products..." name="q">
+                  <button class="btn btn-outline-primary" type="submit">
+                      <i class="fas fa-search"></i>
+                  </button>
+              </div>
+          </form>
+      </div>
+  </div>
+</nav>
+
+<style>
+  .navbar {
+      padding: 15px 0;
+      transition: all 0.3s;
+  }
+  
+  .nav-link {
+      font-weight: 500;
+      color: var(--dark-color) !important;
+      transition: color 0.2s;
+  }
+  
+  .nav-link:hover {
+      color: var(--primary-color) !important;
+  }
+  
+  .dropdown-menu {
+      border: none;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  
+  .dropdown-item {
+      padding: 8px 20px;
+  }
+  
+  .dropdown-item:hover {
+      background-color: #f8f9fa;
+      color: var(--primary-color) !important;
+  }
+  
+  .navbar.scrolled {
+      background-color: white !important;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+</style>
+
+<script>
+  $(window).scroll(function() {
+      if ($(this).scrollTop() > 50) {
+          $('.navbar').addClass('scrolled');
+      } else {
+          $('.navbar').removeClass('scrolled');
+      }
+  });
+</script>

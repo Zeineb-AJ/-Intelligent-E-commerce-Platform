@@ -1,0 +1,105 @@
+{% extends 'layout.html' %}
+{% block body_block %}
+{% include '_messages.html' %}
+
+
+<div class="container-fluid">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm p-3 mb-4 rounded">
+        <a class="navbar-brand fw-bold" href="/admin">ADMIN </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/admin"><i class="fas fa-home"></i> Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/brands"><i class="fas fa-tags"></i> Brands</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/categories"><i class="fas fa-list"></i> Categories</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/order"><i class="fas fa-list"></i> Order</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/addproduct"><i class="fas fa-plus-circle"></i> Add Product</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white fw-bold">
+            List of Available Products
+        </div>
+        <div class="card-body">
+            <table class="table table-hover text-center align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Brand</th>
+                        <th>Image</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ product.name }}</td>
+                        <td>${{ product.price }}</td>
+                        <td>{{ product.brand.name }}</td>
+                        <td>
+                            <img src="{{ url_for('static', filename='images/' + product.image_1) }}" class="img-thumbnail" width="100" alt="Image">
+                        </td>
+                        <td>
+                            <a href="{{ url_for('updateproduct', id=product.id) }}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
+                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ product.id }}">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+            <!-- Pagination -->
+            <div class="row text-center">
+                <div class="col text-center mt-4">
+                    {% if products.has_prev %}
+                        <a href="{{ url_for('admin', page=products.prev_num) }}" class="btn btn-outline-info btn-sm"> Previous</a>
+                    {% endif %}
+                    
+                    {% for page_num in products.iter_pages(left_edge=1, right_edge=2, left_current=1, right_current=2) %}
+                        {% if page_num %}
+                            {% if products.page == page_num %}
+                                <a href="{{ url_for('admin', page=page_num) }}" class="btn btn-info btn-sm disabled"> {{ page_num }}</a>
+                            {% else %}
+                                <a href="{{ url_for('admin', page=page_num) }}" class="btn btn-outline-info btn-sm"> {{ page_num }}</a>
+                            {% endif %}
+                        {% else %}
+                            ...
+                        {% endif %}
+                    {% endfor %}
+            
+                    {% if products.has_next %}
+                        <a href="{{ url_for('admin', page=products.next_num) }}" class="btn btn-outline-info btn-sm"> Next</a>
+                    {% endif %}
+                </div>
+            </div>
+            
+           
+    
+
+ <br>
+{% endblock body_block %}

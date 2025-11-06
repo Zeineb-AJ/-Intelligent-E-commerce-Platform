@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+{% block body_block %}
+<div class="container mt-4">
+  <h1 class="text-center">Panier</h1>
+  {% if session['shopcart'] %}
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Produit</th>
+        <th>Prix</th>
+        <th>Quantité</th>
+        <th>Sous-total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for key, product in session['shopcart'].items() %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ product['name'] }}</td>
+        <td>{{ product['price'] }}</td>
+        <td>{{ product['quantity'] }}</td>
+        <td>{{ (product['price'] * product['quantity'])|float }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="text-right">
+    <h3>Total : {{ total_price }} €</h3>
+    <a href="{{ url_for('confirm_order') }}" class="btn btn-success">
+      <i class="fas fa-check"></i> Confirmer la commande
+    </a>
+  </div>
+  {% else %}
+  <div class="alert alert-warning text-center">
+    <h4>Votre panier est vide !</h4>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,234 @@
+{% extends 'layout.html' %}
+
+{% block body_block %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Colonne gauche - Carrousel promotions (2/12) -->
+        <div class="col-md-2 d-none d-md-block order-md-1">
+            <div class="sticky-top" style="top: 20px;">
+                <div id="promoCarousel" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                        {% for promo_product in promo_products %}
+                        <div class="carousel-item {{ 'active' if loop.first else '' }}">
+                            <div class="card mb-6 border-danger">
+                                <div class="card-body text-center">
+                                    <img src="{{url_for('static', filename='images/'+promo_product.image_1)}}" 
+                                         alt="{{promo_product.name}}" class="img-fluid mb-2" style="max-height: 120px;">
+                                    <h6 class="font-weight-bold">{{promo_product.name}}</h6>
+                                    <p class="text-center">
+                                        {% if promo_product.discount > 0 %}
+                                        <span class="text-muted"><del>{{ "%.2f"|format(promo_product.price*(1 + promo_product.discount/100)) }}€</del></span>
+                                        <span class="font-weight-bold text-danger ml-2">{{ "%.2f"|format(promo_product.price) }}€</span>
+                                        <span class="badge badge-danger ml-2">-{{ promo_product.discount }}%</span>
+                                        {% else %}
+                                        <span class="font-weight-bold">{{ "%.2f"|format(promo_product.price) }}€</span>
+                                        {% endif %}
+                                    </p>
+                                    <div class="d-flex justify-content-between">
+                                        <a href="{{url_for('product_details', id=promo_product.id)}}" class="btn btn-sm btn-outline-info">Détails</a>
+                                        <form action="{{url_for('add_cart')}}" method="post">
+                                            <input type="hidden" name="product_id" value="{{promo_product.id}}">
+                                            <input type="hidden" name="quantity" value="1">
+                                            <button type="submit" class="btn btn-sm btn-danger">Ajouter</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <a class="carousel-control-prev" href="#promoCarousel" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Précédent</span>
+                    </a>
+                    <a class="carousel-control-next" href="#promoCarousel" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Suivant</span>
+                    </a>
+                </div>
+                
+                <div class="card mt-3 border-primary">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h6 class="mb-0">OFFRE SPÉCIALE</h6>
+                    </div>
+                    <div class="card-body text-center">
+                        <p class="small">15% supplémentaire</p>
+                        <p class="small">sur votre 1ère commande</p>
+                        <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#couponModal">Code promo</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Colonne centrale - Produits principaux (8/12) -->
+        <div class="col-md-8 order-md-2">
+            <div class="row mt-2">
+                {% if brand %}
+                    {% for b in brand.items %}
+                    <div class="col-lg-3 col-md-4 col-sm-6 d-flex align-items-stretch">
+                        <div class="card mt-2">
+                            <div class="card-body">
+                                <img src="{{url_for('static', filename='images/'+b.image_1)}}" 
+                                    alt="{{b.name}}" class="card-img-top">
+                                <h5 class="text-center">{{b.name}}</h5>
+                                <p class="text-center">Price:{{b.price}}</p>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{{url_for('product_details', id=b.id)}}" class="float-left btn-sm btn-info">Details</a>
+                                <form action="{{url_for('add_cart')}}" method="post">
+                                    <input type="hidden" name="product_id" value="{{b.id}}">
+                                    <button type="submit" class="float-right btn btn-sm btn-warning">Add to Cart</button>
+                                    <input type="hidden" name="quantity" id='' value="1" min="1" max="{{b.stock}}">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <!-- Pagination brand... -->
+                {% elif category %}
+                    {% for c in category.items %}
+                    <div class="col-lg-3 col-md-4 col-sm-6 d-flex align-items-stretch">
+                        <div class="card mt-2">
+                            <div class="card-body">
+                                <img src="{{url_for('static', filename='images/'+c.image_1)}}" 
+                                    alt="{{c.name}}" class="card-img-top">
+                                <h5 class="text-center">{{c.name}}</h5>
+                                <p class="text-center">Price:{{c.price}}</p>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{{url_for('product_details', id=c.id)}}" class="float-left btn-sm btn-info">Details</a>
+                                <form action="{{url_for('add_cart')}}" method="post">
+                                    <input type="hidden" name="product_id" value="{{c.id}}">
+                                    <button type="submit" class="float-right btn btn-sm btn-warning">Add to Cart</button>
+                                    <input type="hidden" name="quantity" id='' value="1" min="1" max="{{c.stock}}">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <!-- Pagination category... -->
+                {% else %}
+                    {% for product in products.items %}
+                    <div class="col-lg-3 col-md-4 col-sm-6 d-flex align-items-stretch">
+                        <div class="card mt-3 mb-3">
+                            <div class="card-body">
+                                <img src="{{url_for('static', filename='images/'+product.image_1)}}" 
+                                    alt="{{product.name}}" class="card-img-top">
+                                <h5 class="text-center">{{product.name}}</h5>
+                                <p class="text-center">{{product.brand.name}}</p>
+                                <p class="text-center">
+                                    {% if product.discount > 0 %}
+                                    <span class="text-muted"><del>{{ "%.2f"|format(product.price*(1 + product.discount/100)) }}€</del></span>
+                                    <span class="font-weight-bold text-danger">{{ "%.2f"|format(product.price) }}€</span>
+                                    {% else %}
+                                    <span class="font-weight-bold">{{ "%.2f"|format(product.price) }}€</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{{url_for('product_details', id=product.id)}}" class="float-left btn-sm btn-info">Details</a>
+                                <form action="{{url_for('add_cart')}}" method="post">
+                                    <input type="hidden" name="product_id" value="{{product.id}}">
+                                    <button type="submit" class="float-right btn btn-sm btn-warning">Add to Cart</button>
+                                    <input type="hidden" name="quantity" id='' value="1" min="1" max="{{product.stock}}">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <!-- Pagination products... -->
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Colonne droite - Top ventes & nouveautés (2/12) -->
+        <div class="col-md-2 d-none d-md-block order-md-3">
+            <div class="sticky-top" style="top: 20px;">
+                <!-- TOP VENTES -->
+                <div class="card mb-3 border-success">
+                    <div class="card-header bg-success text-white text-center">
+                        <h6 class="mb-0">TOP VENTES</h6>
+                    </div>
+                    <div class="card-body">
+                        {% for trend_product in trend_products %}
+                        <div class="mb-3 text-center">
+                            <img src="{{url_for('static', filename='images/'+trend_product.image_1)}}" 
+                                 alt="{{trend_product.name}}" class="img-fluid mb-2" style="max-height: 100px;">
+                            <h6 class="font-weight-bold mb-1">{{trend_product.name}}</h6>
+                            <p class="mb-2 text-success font-weight-bold">{{ "%.2f"|format(trend_product.price) }}€</p>
+                            <form action="{{url_for('add_cart')}}" method="post">
+                                <input type="hidden" name="product_id" value="{{trend_product.id}}">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="btn btn-sm btn-success btn-block">Ajouter</button>
+                            </form>
+                        </div>
+                        {% if not loop.last %}<hr>{% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- NOUVEAUTÉS -->
+                <div class="card border-info">
+                    <div class="card-header bg-info text-white text-center">
+                        <h6 class="mb-0">NOUVEAUTÉS</h6>
+                    </div>
+                    <div class="card-body">
+                        {% for new_product in new_products %}
+                        <div class="mb-3 text-center">
+                            <img src="{{url_for('static', filename='images/'+new_product.image_1)}}" 
+                                 alt="{{new_product.name}}" class="img-fluid mb-2" style="max-height: 100px;">
+                            <h6 class="font-weight-bold mb-1">{{new_product.name}}</h6>
+                            <p class="mb-2 text-info font-weight-bold">{{ "%.2f"|format(new_product.price) }}€</p>
+                            <a href="{{url_for('product_details', id=new_product.id)}}" class="btn btn-sm btn-info btn-block">Voir</a>
+                        </div>
+                        {% if not loop.last %}<hr>{% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal code promo -->
+<div class="modal fade" id="couponModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Code promo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <h4 class="text-primary">KSZ15</h4>
+                <p>Utilisez ce code pour 15% de réduction</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                <button type="button" class="btn btn-primary" onclick="copyCoupon()">Copier</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+        $('#promoCarousel').carousel({
+            interval: 5000,
+            pause: "hover"
+        });
+        
+        // Badge PROMO sur les produits en réduction
+        $('.card').has('.text-danger').prepend('<span class="badge badge-danger position-absolute" style="top:10px; left:10px;">PROMO</span>');
+    });
+    
+    function copyCoupon() {
+        navigator.clipboard.writeText("KSZ15");
+        alert("Code promo copié !");
+    }
+</script>
+{% endblock body_block %}

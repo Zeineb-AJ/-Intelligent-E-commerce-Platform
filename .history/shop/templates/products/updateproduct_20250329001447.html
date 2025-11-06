@@ -1,0 +1,100 @@
+{% extends 'layout.html' %}
+
+{% block body_block %}
+{% include '_messages.html' %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <h2 class="text-center bg-info p-2 mb-4 rounded">
+                Mettre à jour le produit
+            </h2>
+            
+            {% from '_formhelpers.html' import render_field %}
+            <form method="POST" enctype="multipart/form-data" novalidate>
+                {{ form.hidden_tag() }}
+                
+                <!-- Champs du formulaire -->
+                {{ render_field(form.name, class="form-control", placeholder="Nom du produit") }}
+                
+                <div class="form-group">
+                    {{ form.price.label }}
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">RS</span>
+                        </div>
+                        {{ form.price(class="form-control", placeholder="Prix", step="0.01") }}
+                    </div>
+                    {% if form.price.errors %}
+                        {% for error in form.price.errors %}
+                            <small class="text-danger">{{ error }}</small>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                
+                {{ render_field(form.stock, class="form-control", placeholder="Stock") }}
+                
+                <!-- Brand Selector -->
+                <div class="form-group">
+                    <label for="brand">Marque</label>
+                    <select name="brand" id="brand" class="form-control" required>
+                        <option value="{{ product.brand_id }}" selected>{{ product.brand.name }}</option>
+                        {% for brand in brands %}
+                            {% if brand.id != product.brand_id %}
+                                <option value="{{ brand.id }}">{{ brand.name }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <!-- Category Selector -->
+                <div class="form-group">
+                    <label for="category">Catégorie</label>
+                    <select name="category" id="category" class="form-control" required>
+                        <option value="{{ product.category_id }}" selected>{{ product.category.name }}</option>
+                        {% for category in categories %}
+                            {% if category.id != product.category_id %}
+                                <option value="{{ category.id }}">{{ category.name }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                {{ render_field(form.desc, class="form-control", placeholder="Description", rows=5) }}
+                
+                <!-- Image Upload -->
+                <div class="form-group">
+                    <label>Image actuelle</label>
+                    <div class="mb-2">
+                        <img src="{{ url_for('static', filename='images/' + product.image_1) }}" 
+                             class="img-thumbnail" 
+                             style="max-block-size: 200px">
+                           
+                    </div>
+                    
+                    <label for="image_1">Changer l'image</label>
+                    {{ form.image_1(class="form-control-file") }}
+                    {% if form.image_1.errors %}
+                        {% for error in form.image_1.errors %}
+                            <small class="text-danger d-block">{{ error }}</small>
+                        {% endfor %}
+                    {% endif %}
+                    <small class="form-text text-muted">
+                        Formats acceptés: JPG, PNG, JPEG, WEBP. Max 5MB.
+                    </small>
+                </div>
+                
+                <div class="form-group text-center mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg px-4">
+                        <i class="fas fa-save"></i> Mettre à jour
+                    </button>
+                    <a href="{{ url_for('admin') }}" class="btn btn-outline-secondary btn-lg ml-2">
+                        <i class="fas fa-times"></i> Annuler
+                    </a>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</div>
+{% endblock body_block %}

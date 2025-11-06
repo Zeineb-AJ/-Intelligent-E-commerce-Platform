@@ -1,0 +1,49 @@
+<style>
+    /* Fixer la navbar en haut */
+    .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background-color: #004080; /* Adapter à la couleur du site */
+        z-index: 1000;
+    }
+    
+    /* Ajuster la mise en page */
+    .container {
+        display: flex;
+        margin-top: 60px; /* Laisser de l'espace sous la navbar */
+    }
+    
+    .content {
+        flex: 1;
+        padding: 20px;
+    }
+    
+    /* Pagination assortie aux couleurs du site */
+    .pagination a {
+        color: white;
+        background-color: #004080; /* Adapter à la couleur du site */
+        padding: 10px 15px;
+        text-decoration: none;
+        border-radius: 5px;
+    }
+    .pagination a:hover {
+        background-color: #002060; /* Assombrir légèrement au survol */
+    }
+</style>
+
+<div class="navbar">
+    <!-- Contenu de la navbar ici -->
+</div>
+
+<div class="container">
+    <div class="content">
+        <!-- Contenu principal ici -->
+    </div>
+</div>
+
+<div class="pagination">
+    <a href="#">Précédent</a>
+    <a href="#">Suivant</a>
+</div>

@@ -1,0 +1,418 @@
+{% extends 'layout.html' %}
+
+{% block body_block %}
+<style>
+    .product-card {
+        transition: all 0.3s;
+        border: none;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        margin-bottom: 20px;
+    }
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .discount-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #ff3e6c;
+        color: white;
+        padding: 3px 8px;
+        border-radius: 10px;
+        font-size: 12px;
+    }
+    .price {
+        color: #ff3e6c;
+        font-weight: bold;
+    }
+    .original-price {
+        text-decoration: line-through;
+        color: #939393;
+        font-size: 14px;
+    }
+    .category-nav {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 10px 0;
+    }
+    .category-link {
+        color: #333;
+        display: block;
+        padding: 8px 15px;
+        text-decoration: none;
+    }
+    .category-link:hover {
+        color: #ff3e6c;
+        background-color: #f0f0f0;
+    }
+    .add-to-cart-btn {
+        background: #ff3e6c;
+        color: white;
+        border: none;
+    }
+    .add-to-cart-btn:hover {
+        background: #e0355c;
+    }
+    .banner {
+        background: linear-gradient(to right, #ff3e6c, #ff6b8b);
+        color: white;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+     /* Animation de clignotement */
+     .blinking {
+        animation: blink 2s infinite;
+    }
+    
+    @keyframes blink {
+        0% { opacity: 1; }
+        50% { opacity: 0.3; }
+        100% { opacity: 1; }
+    }
+    
+    /* Animation de pulsation pour le bouton */
+    .pulse {
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(255, 62, 108, 0.7);
+        }
+        70% {
+            box-shadow: 0 0 0 10px rgba(255, 62, 108, 0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(255, 62, 108, 0);
+        }
+    }
+</style>
+
+<div class="container-fluid">
+    <!-- Top Banner -->
+    <div class="banner">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h5>Download our app for exclusive deals!</h5>
+                <p class="mb-0">Everything under $1.99</p>
+            </div>
+            <div class="col-md-6 text-right">
+                <button class="btn btn-light">Shop Now</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Left Column - Categories -->
+        <div class="col-md-3">
+            <div class="category-nav sticky-top" style="top: 20px;">
+                <h6 class="px-3 mb-3 font-weight-bold">Categories</h6>
+                <div class="category-list">
+                    {% for category in categories %}
+                    <a href="{{ url_for('get_category', id=category.id) }}" class="category-link d-flex align-items-center">
+                        <span class="flex-grow-1">{{ category.name }}</span>
+                        <i class="fas fa-chevron-right ml-2 text-muted small"></i>
+                    </a>
+                    {% if not loop.last %}<div class="category-divider"></div>{% endif %}
+                    {% endfor %}
+                </div>
+        
+               <div class="club-card mt-4 px-3 py-3" style="background: #fff; border-radius: 10px; box-shadow: 0 4px 12px rgba(255, 62, 108, 0.1); border: 1px solid rgba(255, 62, 108, 0.15);">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <h6 class="font-weight-bold mb-0" style="color: #ff3e6c; font-size: 1.1rem;">KSZ CLUB</h6>
+        <span class="badge badge-pill" style="background: rgba(255, 62, 108, 0.1); color: #ff3e6c; font-weight: 500; padding: 5px 10px;">NEW</span>
+    </div>
+    <div class="club-benefits" style="background: rgba(255, 62, 108, 0.03); border-radius: 8px; padding: 12px;">
+        <div class="benefit-item d-flex align-items-center mb-2">
+            <i class="fas fa-check-circle mr-2" style="color: #ff3e6c;"></i>
+            <span class="small" style="color: #333;">5% off on all items</span>
+        </div>
+        <div class="benefit-item d-flex align-items-center mb-2">
+            <i class="fas fa-check-circle mr-2" style="color: #ff3e6c;"></i>
+            <span class="small" style="color: #333;">Free shipping coupons</span>
+        </div>
+        <div class="benefit-item d-flex align-items-center">
+            <i class="fas fa-check-circle mr-2" style="color: #ff3e6c;"></i>
+            <span class="small" style="color: #333;">Exclusive deals</span>
+        </div>
+    </div>
+    <button class="btn btn-block mt-3 join-btn" style="background: linear-gradient(to right, #ff3e6c, #ff6b8b); border: none; color: white; font-weight: 600; padding: 10px; border-radius: 6px; transition: all 0.3s;">
+        Join Now <i class="fas fa-arrow-right ml-2"></i>
+    </button>
+</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-6">
+            <div class="row">
+                {% if brand %}
+                    {% for b in brand.items %}
+                    <div class="col-lg-4 col-md-6 col-6 mb-4">
+                        <div class="product-card">
+                            {% if b.discount > 0 %}
+                            <span class="discount-badge">-{{ b.discount }}%</span>
+                            {% endif %}
+                            
+                            <img src="{{ url_for('static', filename='images/'+b.image_1) }}" class="card-img-top" alt="{{ b.name }}">
+                            <div class="card-body">
+                                <h6 class="card-title">{{ b.name }}</h6>
+                                <p class="mb-1">
+                                    {% if b.discount > 0 %}
+                                    <span class="price">${{ "%.2f"|format(b.price) }}</span>
+                                    <span class="original-price ml-1">${{ "%.2f"|format(b.price*(1 + b.discount/100)) }}</span>
+                                    {% else %}
+                                    <span class="price">${{ "%.2f"|format(b.price) }}</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <div class="card-footer bg-white">
+                                <a href="{{ url_for('product_details', id=b.id) }}" class="btn btn-sm btn-outline-secondary">Details</a>
+                                <form action="{{ url_for('add_cart') }}" method="post" class="d-inline">
+                                    <input type="hidden" name="product_id" value="{{ b.id }}">
+                                    <button type="submit" class="btn btn-sm add-to-cart-btn">Add to Cart</button>
+                                    <input type="hidden" name="quantity" value="1">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                
+                {% elif category %}
+                    {% for c in category.items %}
+                    <div class="col-lg-4 col-md-6 col-6 mb-4">
+                        <div class="product-card">
+                            {% if c.discount > 0 %}
+                            <span class="discount-badge">-{{ c.discount }}%</span>
+                            {% endif %}
+                            <img src="{{ url_for('static', filename='images/'+c.image_1) }}" class="card-img-top" alt="{{ c.name }}">
+                            <div class="card-body">
+                                <h6 class="card-title">{{ c.name }}</h6>
+                                <p class="mb-1">
+                                    {% if c.discount > 0 %}
+                                    <span class="price">${{ "%.2f"|format(c.price) }}</span>
+                                    <span class="original-price ml-1">${{ "%.2f"|format(c.price*(1 + c.discount/100)) }}</span>
+                                    {% else %}
+                                    <span class="price">${{ "%.2f"|format(c.price) }}</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <div class="card-footer bg-white">
+                                <a href="{{ url_for('product_details', id=c.id) }}" class="btn btn-sm btn-outline-secondary">Details</a>
+                                <form action="{{ url_for('add_cart') }}" method="post" class="d-inline">
+                                    <input type="hidden" name="product_id" value="{{ c.id }}">
+                                    <button type="submit" class="btn btn-sm add-to-cart-btn">Add to Cart</button>
+                                    <input type="hidden" name="quantity" value="1">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                
+                {% else %}
+                    {% for product in products.items %}
+                    <div class="col-lg-4 col-md-6 col-6 mb-4">
+                        <div class="product-card">
+                            {% if product.discount > 0 %}
+                            <span class="discount-badge">-{{ product.discount }}%</span>
+                            {% endif %}
+                            <img src="{{ url_for('static', filename='images/'+product.image_1) }}" class="card-img-top" alt="{{ product.name }}">
+                            <div class="card-body">
+                                <h6 class="card-title">{{ product.name }}</h6>
+                                <p class="text-muted small mb-1">{{ product.brand.name }}</p>
+                                <p class="mb-1">
+                                    {% if product.discount > 0 %}
+                                    <span class="price">${{ "%.2f"|format(product.price) }}</span>
+                                    <span class="original-price ml-1">${{ "%.2f"|format(product.price*(1 + product.discount/100)) }}</span>
+                                    {% else %}
+                                    <span class="price">${{ "%.2f"|format(product.price) }}</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <div class="card-footer bg-white">
+                                <a href="{{ url_for('product_details', id=product.id) }}" class="btn btn-sm btn-outline-secondary">Details</a>
+                                <form action="{{ url_for('add_cart') }}" method="post" class="d-inline">
+                                    <input type="hidden" name="product_id" value="{{ product.id }}">
+                                    <button type="submit" class="btn btn-sm add-to-cart-btn">Add to Cart</button>
+                                    <input type="hidden" name="quantity" value="1">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <!-- Pagination -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            {% if brand %}
+                                {% if brand.has_prev %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('get_brand', id=get_b.id, page=brand.prev_num) }}">Previous</a>
+                                </li>
+                                {% endif %}
+                                
+                                {% for page_num in brand.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=1) %}
+                                    {% if page_num %}
+                                        <li class="page-item {% if brand.page == page_num %}active{% endif %}">
+                                            <a class="page-link" href="{{ url_for('get_brand', id=get_b.id, page=page_num) }}">{{ page_num }}</a>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                                    {% endif %}
+                                {% endfor %}
+                                
+                                {% if brand.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('get_brand', id=get_b.id, page=brand.next_num) }}">Next</a>
+                                </li>
+                                {% endif %}
+                            
+                            {% elif category %}
+                                {% if category.has_prev %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('get_category', id=get_cat.id, page=category.prev_num) }}">Previous</a>
+                                </li>
+                                {% endif %}
+                                
+                                {% for page_num in category.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=1) %}
+                                    {% if page_num %}
+                                        <li class="page-item {% if category.page == page_num %}active{% endif %}">
+                                            <a class="page-link" href="{{ url_for('get_category', id=get_cat.id, page=page_num) }}">{{ page_num }}</a>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                                    {% endif %}
+                                {% endfor %}
+                                
+                                {% if category.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('get_category', id=get_cat.id, page=category.next_num) }}">Next</a>
+                                </li>
+                                {% endif %}
+                            
+                            {% else %}
+                                {% if products.has_prev %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('home', page=products.prev_num) }}">Previous</a>
+                                </li>
+                                {% endif %}
+                                
+                                {% for page_num in products.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=1) %}
+                                    {% if page_num %}
+                                        <li class="page-item {% if products.page == page_num %}active{% endif %}">
+                                            <a class="page-link" href="{{ url_for('home', page=page_num) }}">{{ page_num }}</a>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                                    {% endif %}
+                                {% endfor %}
+                                
+                                {% if products.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('home', page=products.next_num) }}">Next</a>
+                                </li>
+                                {% endif %}
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column - Special Offers -->
+        <div class="col-md-3">
+            <div class="sticky-top" style="top: 20px;">
+                <div class="card mb-3 border-0 shadow-sm">
+                    <div class="card-header bg-white border-0">
+                        <h6 class="mb-0 font-weight-bold">Special Offer</h6>
+                    </div>
+                    <div class="card-body text-center py-4">
+                        <div class="offer-badge mb-3">
+                            <span class="badge badge-danger px-3 py-2 blinking">15% OFF</span>
+                        </div>
+                        <p class="mb-4">Get 15% off your first order</p>
+                        <button class="btn btn-promo btn-block py-2 pulse" data-toggle="modal" data-target="#couponModal">
+                            <span class="promo-text">GET PROMO CODE</span>
+                            <i class="fas fa-gift ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+                
+        <div class="card">
+    <div class="card-header bg-white">
+        <h6 class="mb-0">Top Sellers</h6>
+    </div>
+    <div class="card-body">
+        {% if brand %}
+            {% for product in brand.items[:3] %}
+            <div class="mb-3">
+                <img src="{{ url_for('static', filename='images/'+product.image_1) }}" class="img-fluid mb-2" alt="{{ product.name }}">
+                <h6 class="small">{{ product.name }}</h6>
+                <p class="price mb-0">${{ "%.2f"|format(product.price) }}</p>
+            </div>
+            {% if not loop.last %}<hr>{% endif %}
+            {% endfor %}
+        {% elif category %}
+            {% for product in category.items[:3] %}
+            <div class="mb-3">
+                <img src="{{ url_for('static', filename='images/'+product.image_1) }}" class="img-fluid mb-2" alt="{{ product.name }}">
+                <h6 class="small">{{ product.name }}</h6>
+                <p class="price mb-0">${{ "%.2f"|format(product.price) }}</p>
+            </div>
+            {% if not loop.last %}<hr>{% endif %}
+            {% endfor %}
+        {% else %}
+            {% for product in products.items[:3] %}
+            <div class="mb-3">
+                <img src="{{ url_for('static', filename='images/'+product.image_1) }}" class="img-fluid mb-2" alt="{{ product.name }}">
+                <h6 class="small">{{ product.name }}</h6>
+                <p class="price mb-0">${{ "%.2f"|format(product.price) }}</p>
+            </div>
+            {% if not loop.last %}<hr>{% endif %}
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Coupon Modal -->
+<div class="modal fade" id="couponModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Your Promo Code</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <h3 class="text-danger">KSZ15</h3>
+                <p>Use this code at checkout for 15% off</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn add-to-cart-btn" onclick="copyCoupon()">Copy Code</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function copyCoupon() {
+        navigator.clipboard.writeText("KSZ15");
+        alert("Promo code copied to clipboard!");
+        $('#couponModal').modal('hide');
+    }
+</script>
+{% endblock %}
